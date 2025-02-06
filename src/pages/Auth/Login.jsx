@@ -1,11 +1,29 @@
 import Button from "../../Components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import authService from "../../services/authServices";
+import { useState } from "react";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [username , setusername] = useState("");
+  const [password , setPassword] = useState("");
+  const [error , setError] = useState(null);
   const handleSignUpButton = () => {
     navigate('/signup');
+  }
+  console.log('email ,passw' , username , password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      const userData = await authService.login({username, password});
+      console.log('login successful' , userData);
+
+    } catch (error) {
+        setError(error);
+    }
   }
     return (
       <>
@@ -34,18 +52,20 @@ export default function Login() {
               Sign into your account
             </h2>
           </div>
-            <form action="#" method="POST" className="space-y-6 mt-6 ">
+            <form onSubmit={handleLogin} className="space-y-6 mt-6 ">
+            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
               <div>
                 <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
-                  Email address
+                  Email address or username
                 </label>
                 <div className="mt-2">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="username"
+                    name="username"
+                    type="username"
+                    value={username}
+                    onChange={(e) => setusername(e.target.value)}
                     required
-                    autoComplete="email"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2  sm:text-sm/6"
                   />
                 </div>
@@ -67,6 +87,8 @@ export default function Login() {
                     id="password"
                     name="password"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="current-password"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"

@@ -11,6 +11,7 @@ const AddVehiclePage = ({ onSubmit }) => {
         seats: "",
         location: "",
         pricePerHour: "",
+        vehicleNumber: ""
     });
 
     const [image, setImage] = useState(null);
@@ -116,8 +117,22 @@ const AddVehiclePage = ({ onSubmit }) => {
         </div>
         </div>
 
-        
+        <div className="flex gap-4">
+            <div className="w-1/2">
+                <InputField
+                    label="Vehicle number"
+                    id="vehicleNumber"
+                    name="vehicleNumber"
+                    value={vehicleData.vehicleNumber}
+                    onChange={handleInputChange}
+                    placeholder="Enter vehicle numbere"
+                    required
+                />
+            </div>
 
+        </div>
+
+    
         {/* Buttons */}
         <div className="flex justify-end mt-6 gap-4">
             <Button
