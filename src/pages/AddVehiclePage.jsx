@@ -3,8 +3,9 @@ import InputField from "../Components/Utils/InputComponent";
 import Button from "../Components/Button/Button";
 import SelectField from "../Components/Utils/SelectComponent";
 import ImageUploadField from "../Components/Utils/ImageUploadComponent";
+import vehicleService from "../services/vehicleServices";
 
-const AddVehiclePage = ({ onSubmit }) => {
+const AddVehiclePage = () => {
     const [vehicleData, setVehicleData] = useState({
         name: "",
         type: "",
@@ -14,21 +15,30 @@ const AddVehiclePage = ({ onSubmit }) => {
         vehicleNumber: ""
     });
 
+
     const [image, setImage] = useState(null);
 
-    const handleInputChange = (e) => {
+    const handleInputChange =async (e) => {
         const { name, value } = e.target;
         setVehicleData({ ...vehicleData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.append("vehicleData", JSON.stringify(vehicleData));
+        // Directly append each field of vehicleData as individual fields
+        formData.append("vehicleName", vehicleData.name);
+        formData.append("vehicleType", vehicleData.type);
+        formData.append("numberOfSeats", vehicleData.seats);
+        formData.append("vehicleLocation", vehicleData.location);
+        formData.append("pricePerHour", vehicleData.pricePerHour);
+        formData.append("vehicleNumber", vehicleData.vehicleNumber); 
         if (image) {
             formData.append("image", image);
-        }
-        onSubmit(formData); // Pass the form data back to the parent
+        };
+        console.log('formdata' , formData);
+        const response = await vehicleService.addVehicle(formData);
+        console.log('response' , response);
         setVehicleData({ name: "", type: "", seats: "", location: "", pricePerHour: "" });
         setImage(null);
     };

@@ -8,7 +8,7 @@ const authApi = {
   
     refreshToken: (refreshToken) => API.post("/auth/refresh", { refreshToken }),
   
-    logout: () => API.post("/auth/logout"),
+    logout: () => API.post("/api/v1/users/logout"),
   
     forgotPassword: (email) => API.post("/auth/forgot-password", { email }),
   

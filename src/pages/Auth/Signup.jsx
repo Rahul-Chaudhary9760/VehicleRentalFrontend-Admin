@@ -1,11 +1,28 @@
+import { useState } from 'react';
 import Button from '../../Components/Button/Button';
 import { useNavigate } from "react-router-dom";
+import authService from '../../services/authServices';
 
 export default function Signup() {
 
     const navigate = useNavigate();
+    const[error , setError] = useState(null);
+
     const handleNavigateToLogin = () => {
         navigate('/login')
+    }
+    const handleSignup = async () => {
+        e.preventDefault();
+        try {
+            const userRegister = await authService.register({username , passoword});
+            if(userRegister){
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error('Error in registering user' , error)
+            setError('Error registering error' , error?.message);
+        }
+        
     }
     return (
         <>
@@ -22,6 +39,7 @@ export default function Signup() {
                   Create an account
               </h1>
               <form className="space-y-4 md:space-y-6" action="#">
+                { error && <p className="text-red-500 text-sm mb-2">{error}</p>}
                   <div>
                       <label for="email" className="block mb-2 text-sm font-medium text-black">Your email</label>
                       <input type="email" name="email" id="email" className="border border-gray-300 text-gray-900 text-sm rounded-lg bg-WhiteSecondary focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="name@company.com" required=""/>

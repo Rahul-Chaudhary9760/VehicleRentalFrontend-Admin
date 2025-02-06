@@ -14,15 +14,21 @@ const authService = {
         try {
             const response = await authApi.login(credentials);
             console.log('response data login' , response.data.data)
-            const {accessToken , refreshToken} = response.data.data;
-            
-            //store token securly
-            localStorage.setItem('accessToken' , accessToken);
-            localStorage.setItem('refreshToken' , refreshToken);
             return response.data;
-
         } catch (error) {
             throw error.response?.data?.data?.message || "Login Failed";
+        }
+    },
+
+    async logout(logoutdetails){
+        try {
+            const response = await authApi.logout(logoutdetails);
+            if(response){
+                localStorage.clear();
+            }
+            return response.data
+        } catch (error) {
+            throw error.response?.data.data?.message || "Logout failed";
         }
     }
 }

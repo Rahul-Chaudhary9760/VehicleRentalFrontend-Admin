@@ -4,7 +4,8 @@ const API = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_LOCAL_URL,
     headers: {
         "Content-type": "application/json"
-    }
+    },
+    withCredentials: true
 });
 
 API.interceptors.request.use((config) => {

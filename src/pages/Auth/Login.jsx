@@ -12,14 +12,16 @@ export default function Login() {
   const handleSignUpButton = () => {
     navigate('/signup');
   }
-  console.log('email ,passw' , username , password);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
       const userData = await authService.login({username, password});
-      console.log('login successful' , userData);
+      console.log('userdata login' , userData);
+      if(userData){
+        navigate('/dashboard');
+      }
 
     } catch (error) {
         setError(error);
