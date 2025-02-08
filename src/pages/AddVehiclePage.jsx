@@ -36,10 +36,9 @@ const AddVehiclePage = () => {
         if (image) {
             formData.append("image", image);
         };
-        console.log('formdata' , formData);
         const response = await vehicleService.addVehicle(formData);
         console.log('response' , response);
-        setVehicleData({ name: "", type: "", seats: "", location: "", pricePerHour: "" });
+        setVehicleData({ name: "", type: "", seats: "", location: "", pricePerHour: "" , vehicleNumber: ""});
         setImage(null);
     };
 

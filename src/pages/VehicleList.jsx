@@ -1,19 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../Components/Button/Button";
 import { useNavigate } from "react-router-dom";
-
-
-const dummyvehiclesData = [
-    { name: 'Swift', type: 'Petrol', seats: 4 , location:"Agra" , pricePerHour:100 },
-    { name: 'Tesla Model S', type: 'Electric', seats: 5 , location:"Mathura" , pricePerHour:200},
-];
+import vehicleService from "../services/vehicleServices";
 
 
 export default function VehicleList () {
     const navigate = useNavigate();
-    const handleNavigateToAddVehicle = () => {
-        navigate('/addVehicle')
+    const [vehicleList , setVehicleList] = useState([]);
+    const [isModelOpen , setIsModelOpen] = useState(false);
+    const [updatedData , setUpdatedData] = useState({
+        pricePerHour: 0,
+        vehicleLocation: ""
+    })
+    const [selectedVehicle , setSelectedVehicle] = useState(null);
+
+    const getVehicleList = async () =>{
+        const response = await vehicleService.getVehicleLists();
+        if(response) setVehicleList(response.data.vehicleList);
+    };
+
+    const deleteVehilce = async (vehicleId) => {
+        try {
+            await vehicleService.deleteVehicle(vehicleId);
+            setVehicleList((prevList) => prevList.filter((vehicle) => vehicle._id !== vehicleId));
+        } catch (error) {
+            console.error("Error deleting vehicle:", error);
+        }
     }
+
+    const openEditModel = (vehicle) => {
+        setSelectedVehicle(vehicle);
+        setUpdatedData({
+            pricePerHour: vehicle.pricePerHour,
+            vehicleLocation: vehicle.vehicleLocation
+        });
+        setIsModelOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsModelOpen(false);
+        setSelectedVehicle(null);
+    };
+
+    const handleInputChange = (e) => {
+        const {name , value} = e.target;
+        setUpdatedData((pervData) => ({
+            ...pervData , 
+            [name]: value
+        }))
+    };
+
+    const handleUpdateVehicle = async () => {
+        if(!selectedVehicle) return ;
+        try {
+            await vehicleService.editVehicle(selectedVehicle._id , updatedData);
+            setVehicleList((prevList) => prevList.map((vehicle) => vehicle._id === selectedVehicle._id ? {...vehicle , ...updatedData} : vehicle));
+            closeEditModal();
+        } catch (error) {
+            console.error('Error updating vehicle:' , error);
+        }
+    }
+
+    useEffect(() => {
+        getVehicleList();
+    },[]);
+        
+    const handleNavigateToAddVehicle = () => {
+        navigate('/addVehicle');
+    }
+
     return (
         <>
             <div className="p-6">
@@ -28,6 +83,7 @@ export default function VehicleList () {
                 <thead>
                     <tr>
                         <th className="border px-4 py-2">Name</th>
+                        <th className="border px-4 py-2">Vehicle Number</th>
                         <th className="border px-4 py-2">Type</th>
                         <th className="border px-4 py-2">Seats</th>
                         <th className="border px-4 py-2">Price Per Hour</th>
@@ -36,21 +92,24 @@ export default function VehicleList () {
                     </tr>
                 </thead>
                 <tbody>
-                    {dummyvehiclesData.map((vehicle, index) => (
+                    {vehicleList.map((vehicle, index) => (
                         <tr key={index}>
-                            <td className="border px-4 py-2">{vehicle.name}</td>
-                            <td className="border px-4 py-2">{vehicle.type}</td>
-                            <td className="border px-4 py-2">{vehicle.seats}</td>
+                            <td className="border px-4 py-2">{vehicle.vehicleName}</td>
+                            <td className="border px-4 py-2">{vehicle.vehicleNumber}</td>
+                            <td className="border px-4 py-2">{vehicle.vehicleType}</td>
+                            <td className="border px-4 py-2">{vehicle.numberOfSeats}</td>
                             <td className="border px-4 py-2">{vehicle.pricePerHour}</td>
-                            <td className="border px-4 py-2">{vehicle.location}</td>
+                            <td className="border px-4 py-2">{vehicle.vehicleLocation}</td>
                             <td className="border px-4 py-2">
                                 <Button
                                     text="Edit"
                                     className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
+                                    onClick={() => openEditModel(vehicle)}
                                 />
                                 <Button
                                     text="Delete"
                                     className="bg-red-500 text-white px-2 py-1 rounded"
+                                    onClick={() => deleteVehilce(vehicle._id)}
                                 />
                             </td>
                         </tr>
@@ -58,6 +117,37 @@ export default function VehicleList () {
                 </tbody>
             </table>
         </div>
+
+        
+        {
+            isModelOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-xl font-bold mb-4">Edit Vehicle</h2>
+                        <label className="block mb-2">Price Per Hour:</label>
+                        <input
+                            type="number"
+                            name="pricePerHour"
+                            value={updatedData.pricePerHour}
+                            onChange={handleInputChange}
+                            className="w-full border p-2 rounded mb-4"
+                        />
+                        <label className="block mb-2">Location:</label>
+                        <input
+                            type="text"
+                            name="vehicleLocation"
+                            value={updatedData.vehicleLocation}
+                            onChange={handleInputChange}
+                            className="w-full border p-2 rounded mb-4"
+                        />
+                        <div className="flex justify-end">
+                            <Button text="Cancel" className="bg-gray-400 px-4 py-2 hover:bg-blue-600 mr-2 rounded" onClick={closeEditModal} />
+                            <Button text="Save Changes" className="bg-blue-500 px-4 py-2 text-white rounded" onClick={handleUpdateVehicle} />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
 
         </>
     )
