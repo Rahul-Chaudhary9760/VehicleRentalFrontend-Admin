@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import authService from "../../services/authServices";
 import { useState } from "react";
 import useAuthStore from "../../store/useAuthStore";
+import Loader from "../../Components/Loader/Loader";
 
 
 export default function Login() {
@@ -11,18 +12,19 @@ export default function Login() {
   const [username , setusername] = useState("");
   const [password , setPassword] = useState("");
   const [error , setError] = useState(null);
+  const [isLoading , setIsLoading] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
+      setIsLoading(true)
       const userData = await authService.login({username, password});
-      console.log('userdata' , userData);
       setUser(userData.data.user);
-      console.log("User Set in Zustand:", userData.data.user);
       if(userData){
         navigate('/dashboard');
+        setIsLoading(false);
       }
 
     } catch (error) {
@@ -30,7 +32,8 @@ export default function Login() {
     }
   }
     return (
-      <>
+      <> 
+        <Loader isLoading={isLoading}/>
         <div className="flex min-h-screen   flex-1 flex-col justify-center bg-black  text-White px-6 py-12 lg:px-8">
             <div className=" text-black flex justify-center   ">
 

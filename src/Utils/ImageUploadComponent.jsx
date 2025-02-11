@@ -1,5 +1,5 @@
 import React, { useState  , useRef} from "react";
-import Button from "../Button/Button";
+import Button from "../Components/Button/Button";
 
 const ImageUploadField = ({ label, id, onImageChange, previewSize = "w-32 h-32" }) => {
     const [preview, setPreview] = useState("");

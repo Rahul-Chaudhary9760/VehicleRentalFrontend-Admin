@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import Button from "../Components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import vehicleService from "../services/vehicleServices";
+import Loader from "../Components/Loader/Loader";
 
 
 export default function VehicleList () {
     const navigate = useNavigate();
     const [vehicleList , setVehicleList] = useState([]);
+    const [isLoading , setIsLoading] = useState(false);
     const [isModelOpen , setIsModelOpen] = useState(false);
     const [updatedData , setUpdatedData] = useState({
         pricePerHour: 0,
@@ -15,14 +17,18 @@ export default function VehicleList () {
     const [selectedVehicle , setSelectedVehicle] = useState(null);
 
     const getVehicleList = async () =>{
+        setIsLoading(true);
         const response = await vehicleService.getVehicleLists();
         if(response) setVehicleList(response.data.vehicleList);
+        setIsLoading(false);
     };
 
     const deleteVehilce = async (vehicleId) => {
         try {
+            setIsLoading(true);
             await vehicleService.deleteVehicle(vehicleId);
             setVehicleList((prevList) => prevList.filter((vehicle) => vehicle._id !== vehicleId));
+            setIsLoading(false);
         } catch (error) {
             console.error("Error deleting vehicle:", error);
         }
@@ -53,9 +59,11 @@ export default function VehicleList () {
     const handleUpdateVehicle = async () => {
         if(!selectedVehicle) return ;
         try {
+            setIsLoading(true);
             await vehicleService.editVehicle(selectedVehicle._id , updatedData);
             setVehicleList((prevList) => prevList.map((vehicle) => vehicle._id === selectedVehicle._id ? {...vehicle , ...updatedData} : vehicle));
             closeEditModal();
+            setIsLoading(false)
         } catch (error) {
             console.error('Error updating vehicle:' , error);
         }
@@ -71,6 +79,7 @@ export default function VehicleList () {
 
     return (
         <>
+            <Loader isLoading={isLoading}/>
             <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">Vehicles</h2>
