@@ -30,6 +30,15 @@ const authService = {
         } catch (error) {
             throw error.response?.data.data?.message || "Logout failed";
         }
+    },
+
+    async getMe() {
+        try {
+            const user = await authApi.getMe();
+            if (user) user.data
+        } catch (error) {
+            throw error.user?.data?.data?.message || 'User detail not fetched'
+        }
     }
 }
 

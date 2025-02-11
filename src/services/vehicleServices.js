@@ -1,9 +1,12 @@
 import vehicleApi from "../api/vehicleApi";
+import { toast } from "react-toastify";
 
 const vehicleService = {
+
     async addVehicle(vehicleData){
         try {
             const response = await vehicleApi.addVehicle(vehicleData);
+            toast.success("Vehicle added successfully! 🚀");
             return response.data
         } catch (error) {
             throw error.response?.data?.message || "Vehicle not added"

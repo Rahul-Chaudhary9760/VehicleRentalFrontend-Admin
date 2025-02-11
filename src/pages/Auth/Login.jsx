@@ -3,22 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import authService from "../../services/authServices";
 import { useState } from "react";
+import useAuthStore from "../../store/useAuthStore";
+
 
 export default function Login() {
   const navigate = useNavigate();
   const [username , setusername] = useState("");
   const [password , setPassword] = useState("");
   const [error , setError] = useState(null);
-  const handleSignUpButton = () => {
-    navigate('/signup');
-  }
+  const setUser = useAuthStore((state) => state.setUser);
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
       const userData = await authService.login({username, password});
-      console.log('userdata login' , userData);
+      console.log('userdata' , userData);
+      setUser(userData.data.user);
+      console.log("User Set in Zustand:", userData.data.user);
       if(userData){
         navigate('/dashboard');
       }

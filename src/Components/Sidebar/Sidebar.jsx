@@ -1,14 +1,15 @@
 import { Link , useNavigate } from "react-router-dom";
 import Button from "../Button/Button";
 import authService from "../../services/authServices";
-
+import useAuthStore from "../../store/useAuthStore";
 
 export default function Sidebar () {
     const navigate = useNavigate();
+    const {logout} = useAuthStore()
     const handleLogout = async () => {
         const response = await authService.logout();
-        console.log('response logout' , response);
-        if(response) navigate('/login');
+        await logout();
+        if(response) navigate('/');
     }
     return (
         <>

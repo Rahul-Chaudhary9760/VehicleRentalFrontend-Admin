@@ -11,6 +11,10 @@ const authApi = {
     logout: () => API.post("/api/v1/users/logout"),
   
     forgotPassword: (email) => API.post("/auth/forgot-password", { email }),
+
+    getUser: () => API.get('/api/v1/users/me' , {
+        withCredentials: true
+    }),
   
     resetPassword: (token, newPassword) =>
         API.post(`/auth/reset-password/${token}`, { password: newPassword }),
