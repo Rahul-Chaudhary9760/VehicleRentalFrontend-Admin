@@ -9,7 +9,7 @@ export default function Signup() {
     const[error , setError] = useState(null);
 
     const handleNavigateToLogin = () => {
-        navigate('/login')
+        navigate('/')
     }
     const handleSignup = async () => {
         e.preventDefault();

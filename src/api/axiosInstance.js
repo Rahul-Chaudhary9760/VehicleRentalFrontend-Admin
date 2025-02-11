@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_LOCAL_URL,
+    baseURL: import.meta.env.VITE_BACKEND_LIVE_URL,
+    withCredentials: true,
     headers: {
         "Content-type": "application/json"
     },
-    withCredentials: true
+    
 });
 
 API.interceptors.request.use((config) => {
