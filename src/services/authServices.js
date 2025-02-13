@@ -13,7 +13,6 @@ const authService = {
     async login(credentials){
         try {
             const response = await authApi.login(credentials);
-            console.log('response data login' , response.data.data)
             return response.data;
         } catch (error) {
             throw error.response?.data?.data?.message || "Login Failed";

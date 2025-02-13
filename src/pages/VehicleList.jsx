@@ -97,6 +97,8 @@ export default function VehicleList () {
                         <th className="border px-4 py-2">Seats</th>
                         <th className="border px-4 py-2">Price Per Hour</th>
                         <th className="border px-4 py-2">Location</th>
+                        <th className="border px-4 py-2">Availaible</th>
+                        <th className="border px-4 py-2">Booking status</th>
                         <th className="border px-4 py-2">Actions</th>    
                     </tr>
                 </thead>
@@ -109,6 +111,8 @@ export default function VehicleList () {
                             <td className="border px-4 py-2">{vehicle.numberOfSeats}</td>
                             <td className="border px-4 py-2">{vehicle.pricePerHour}</td>
                             <td className="border px-4 py-2">{vehicle.vehicleLocation}</td>
+                            <td className="border px-4 py-2">{vehicle.isAvailaible}</td>
+                            <td className="border px-4 py-2">{vehicle.isBooked}</td>
                             <td className="border px-4 py-2">
                                 <Button
                                     text="Edit"

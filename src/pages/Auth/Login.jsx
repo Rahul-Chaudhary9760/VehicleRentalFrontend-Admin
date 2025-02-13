@@ -21,8 +21,8 @@ export default function Login() {
     try {
       setIsLoading(true)
       const userData = await authService.login({username, password});
-      setUser(userData.data.user);
       if(userData){
+        setUser(userData.data.user);
         navigate('/dashboard');
         setIsLoading(false);
       }
