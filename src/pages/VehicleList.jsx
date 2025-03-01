@@ -111,10 +111,11 @@ export default function VehicleList () {
                             <td className="border px-4 py-2">{vehicle.numberOfSeats}</td>
                             <td className="border px-4 py-2">{vehicle.pricePerHour}</td>
                             <td className="border px-4 py-2">{vehicle.vehicleLocation}</td>
-                            <td className="border px-4 py-2">{vehicle.isAvailaible}</td>
-                            <td className="border px-4 py-2">{vehicle.isBooked}</td>
+                            <td className="border px-4 py-2">  {vehicle.isAvailaible ? "Available" : "Not Available"}
+                            </td>
+                            <td className="border px-4 py-2">{vehicle.isBooked ? "Booked" : "Not booked"}</td>
                             <td className="border px-4 py-2">
-                                <Button
+                                <Button 
                                     text="Edit"
                                     className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
                                     onClick={() => openEditModel(vehicle)}

@@ -13,7 +13,8 @@ const AddVehiclePage = () => {
         seats: "",
         location: "",
         pricePerHour: "",
-        vehicleNumber: ""
+        vehicleNumber: "",
+        isAvailaible: true
     });
 
     const [isLoading , setIsLoading] = useState(false);
@@ -34,7 +35,8 @@ const AddVehiclePage = () => {
         formData.append("numberOfSeats", vehicleData.seats);
         formData.append("vehicleLocation", vehicleData.location);
         formData.append("pricePerHour", vehicleData.pricePerHour);
-        formData.append("vehicleNumber", vehicleData.vehicleNumber); 
+        formData.append("vehicleNumber", vehicleData.vehicleNumber);
+        formData.append('isAvailaible' , vehicleData.isAvailaible) 
         if (image) {
             formData.append("image", image);
         };
@@ -43,13 +45,19 @@ const AddVehiclePage = () => {
         setVehicleData({ name: "", type: "", seats: "", location: "", pricePerHour: "" , vehicleNumber: ""});
         setImage(null);
         setIsLoading(false)
+        if(!response) setIsLoading(false);
     };
 
     const locationOptions = [
-        { value: "sindhiCamp", label: "Sindhi Camp" },
-        { value: "narayanSinghCircle", label: "Narayan Singh Circle" },
-        { value: "jaipurRailwayStation", label: "Jaipur Railway Station" },
+        { value: "Sindhi Camp", label: "Sindhi Camp" },
+        { value: "Narayan Singh Circle", label: "Narayan Singh Circle" },
+        { value: "Jaipur Railway Station", label: "Jaipur Railway Station" },
     ];
+
+    const availiableOptions = [
+        {value: true , label: 'Availaible'} ,
+        {value: false , label: 'Not availaible'} 
+    ]
 
     return (
         <>
@@ -132,7 +140,7 @@ const AddVehiclePage = () => {
             </div>
 
             <div className="flex gap-4">
-                <div className="w-1/2">
+                <div className="flex-1">
                     <InputField
                         label="Vehicle number"
                         id="vehicleNumber"
@@ -143,6 +151,19 @@ const AddVehiclePage = () => {
                         required
                     />
                 </div>
+                <div className="flex-1">
+                    <SelectField
+                        label="Availaible"
+                        id="availaible"
+                        name="availaible"
+                        value={vehicleData.isAvailaible}
+                        onChange={handleInputChange}
+                        options={availiableOptions}
+                        placeholder="Select availaibility"
+                        required
+                    />
+                </div>
+                
 
             </div>
 
